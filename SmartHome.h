@@ -6,34 +6,46 @@
 
 class SmartLight {
 public:
-  int childId = -1;
+  int lightId = -1;
+  int pirSwitchId = -1;
 
   SmartLight(int relayPin);
   SmartLight(int relayPin, int buttonPin);
   SmartLight(int relayPin, int buttonPin, int pirSensorPin);
+  SmartLight(int relayPin, int buttonPin, int pirSensorPin, bool pirSwitch);
 
-  void turnOn(bool sendStateToController = true);
-  void turnOff(bool sendStateToController = true);
-  void turnOnByPir();
-  void turnOffByPir();
-  void changeState();
-  void sendStateToController();
+  void turnLightOn(bool sendStateToController = true);
+  void turnLightOff(bool sendStateToController = true);
+  void turnPirSwitchOn();
+  void turnPirSwitchOff();
+  void turnLightOnByPir();
+  void turnLightOffByPir();
+
+  void changeLightState();
+
+  void sendLightStateToController();
+  void sendPirSwitchStateToController();
+
   bool isButtonActive();
   bool isPirActive();
-  bool shouldTurnOnByPir();
-  bool shouldTurnOffByPir();
+  bool hasPirSwitch();
+
+  bool shouldTurnLightOnByPir();
+  bool shouldTurnLightOffByPir();
 private:
   int _relayPin = -1;
   int _buttonPin = -1;
   int _pirSensorPin = -1;
-  int _pirSwitchPin = -1;
+  bool _pirSwitch = false;
   unsigned long _pirActivatedTime = 0;
   unsigned long _pirGracePeriodStart = 0;
-  bool _isOn = false;
-  bool _isOnByPir = false;
+  bool _isLightOn = false;
+  bool _isLightOnByPir = false;
+  bool _isPirSwitchOn = false;
   Bounce _debounce = Bounce();
 
-  void setInitialState();
+  void setLightInitialState();
+  void setPirSwitchInitialState();
 };
 
 class SmartHome {
@@ -41,14 +53,15 @@ public:
   SmartHome(SmartLight* smartLights, int collectionSize);
   void beSmart();
   void doPresentation();
-  void handleMessage(int smartLightIndex, int newState);
+  void handleLightMessage(int lightId, int newState);
+  void handlePirSwitchMessage(int pirSwitchId, int newState);
 private:
   SmartLight* _smartLights;
   int _collectionSize = 0;
   bool shouldReportState = true;
 
   void setInitialState();
-  void assignChildIds();
+  void assignIds();
 };
 
 #endif
