@@ -20,6 +20,7 @@ public:
   void sendStateToController();
   bool isButtonActive();
   bool isPirActive();
+  bool shouldTurnOnByPir();
   bool shouldTurnOffByPir();
 private:
   int _relayPin = -1;
@@ -27,6 +28,7 @@ private:
   int _pirSensorPin = -1;
   int _pirSwitchPin = -1;
   unsigned long _pirActivatedTime = 0;
+  unsigned long _pirGracePeriodStart = 0;
   bool _isOn = false;
   bool _isOnByPir = false;
   Bounce _debounce = Bounce();

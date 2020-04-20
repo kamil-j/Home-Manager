@@ -15,7 +15,7 @@
 #include <MySensors.h>
 
 #define BUTTON_ACTIVE LOW
-#define MOTION_DETECTED_TIME 5000
+#define PIR_DETECTOR_ACTIVE_TIME 20000
 #define PIR_DETECTOR_GRACE_PERIOD 20000
 #define RELAY_ON LOW
 #define RELAY_OFF HIGH
@@ -71,6 +71,7 @@ void SmartLight::turnOff(bool sendStateToController) {
 	saveState(_relayPin, STATE_OFF);
 	_isOn = false;
 	_isOnByPir = false;
+	_pirGracePeriodStart = millis();
 	if (sendStateToController) {
 		sendStateToController();
 	}
@@ -121,15 +122,26 @@ void SmartLight::turnOffByPir() {
 	}
 }
 
+bool SmartLight::shouldTurnOnByPir() {
+    if (_isOnByPir) {
+		return false;
+	}
+	unsigned long currentTime = millis();
+	if (currentTime < _pirGracePeriodStart) { //Only TRUE when millis() will overflow (go back to zero), after approximately 50 days
+		return currentTime > PIR_DETECTOR_GRACE_PERIOD;
+	}
+	return millis() - _pirGracePeriodStart > PIR_DETECTOR_GRACE_PERIOD;
+}
+
 bool SmartLight::shouldTurnOffByPir() {
 	if (!_isOnByPir) {
 		return false;
 	}
 	unsigned long currentTime = millis();
 	if (currentTime < _pirActivatedTime) { //Only TRUE when millis() will overflow (go back to zero), after approximately 50 days
-		return currentTime > MOTION_DETECTED_TIME;
+		return currentTime > PIR_DETECTOR_ACTIVE_TIME;
 	}
-	return millis() - _pirActivatedTime > MOTION_DETECTED_TIME;
+	return millis() - _pirActivatedTime > PIR_DETECTOR_ACTIVE_TIME;
 }
 
 //=========SMART_HOME==========
@@ -155,8 +167,7 @@ void SmartHome::beSmart() {
 		if (_smartLights[i].isButtonActive()) {
 			_smartLights[i].changeState();
 		}
-
-		if (_smartLights[i].isPirActive()) {
+		if (_smartLights[i].isPirActive() && _smartLights[i].shouldTurnOnByPir()) {
 			_smartLights[i].turnOnByPir();
 		} else if (_smartLights[i].shouldTurnOffByPir()) {
 			_smartLights[i].turnOffByPir();
