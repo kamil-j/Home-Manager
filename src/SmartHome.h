@@ -40,7 +40,7 @@ private:
   unsigned long _pirGracePeriodStart = 0;
   bool _isLightOn = false;
   bool _isLightOnByPir = false;
-  bool _isPirSwitchOn = false;
+  bool _isPirSwitchOn = true;
   Bounce _debounce = Bounce();
 
   void setLightInitialState();
