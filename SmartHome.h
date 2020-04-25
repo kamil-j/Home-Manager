@@ -14,6 +14,8 @@ public:
   SmartLight(int relayPin, int buttonPin, int pirSensorPin);
   SmartLight(int relayPin, int buttonPin, int pirSensorPin, bool pirSwitch);
 
+  void initialize();
+
   void turnLightOn(bool sendStateToController = true);
   void turnLightOff(bool sendStateToController = true);
   void turnPirSwitchOn();
@@ -22,9 +24,6 @@ public:
   void turnLightOffByPir();
 
   void changeLightState();
-
-  void sendLightStateToController();
-  void sendPirSwitchStateToController();
 
   bool isButtonActive();
   bool isPirActive();
@@ -46,6 +45,8 @@ private:
 
   void setLightInitialState();
   void setPirSwitchInitialState();
+  void sendLightStateToController();
+  void sendPirSwitchStateToController();
 };
 
 class SmartHome {
@@ -58,9 +59,9 @@ public:
 private:
   SmartLight* _smartLights;
   int _collectionSize = 0;
-  bool shouldReportState = true;
+  bool _isNotInitialized = true;
 
-  void setInitialState();
+  void initialize();
   void assignIds();
 };
 

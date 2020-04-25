@@ -29,8 +29,7 @@ extern SmartHome smartHome;
 SmartLight::SmartLight(int relayPin) {
 	_relayPin = relayPin;
 	pinMode(_relayPin, OUTPUT);
-
-	setLightInitialState();
+	digitalWrite(_relayPin, RELAY_OFF);
 }
 
 SmartLight::SmartLight(int relayPin, int buttonPin) : SmartLight(relayPin) {
@@ -50,17 +49,6 @@ SmartLight::SmartLight(int relayPin, int buttonPin, int pirSensorPin) : SmartLig
 
 SmartLight::SmartLight(int relayPin, int buttonPin, int pirSensorPin, bool pirSwitch) : SmartLight(relayPin, buttonPin, pirSensorPin) {
 	_pirSwitch = pirSwitch;
-	if(_pirSwitch) {
-	    setPirSwitchInitialState();
-	}
-}
-
-void SmartLight::setLightInitialState() {
-	if (loadState(lightId) == STATE_ON) {
-		turnLightOn(false); //It is too early to send state to the controller in constructor
-	} else {
-		turnLightOff(false); //It is too early to send state to the controller in constructor
-	}
 }
 
 void SmartLight::turnLightOn(bool sendStateToController) {
@@ -114,14 +102,6 @@ void SmartLight::turnLightOffByPir() {
 		_isLightOn = false;
 		_isLightOnByPir = false;
 		sendLightStateToController();
-	}
-}
-
-void SmartLight::setPirSwitchInitialState() {
-	if (loadState(pirSwitchId) == STATE_ON) {
-		turnPirSwitchOn();
-	} else {
-		turnPirSwitchOff();
 	}
 }
 
@@ -184,6 +164,30 @@ bool SmartLight::shouldTurnLightOffByPir() {
 	return millis() - _pirActivatedTime > PIR_DETECTOR_ACTIVE_TIME;
 }
 
+void SmartLight::initialize() {
+	setLightInitialState();
+	if(_pirSwitch) {
+        setPirSwitchInitialState();
+        sendPirSwitchStateToController();
+    }
+}
+
+void SmartLight::setLightInitialState() {
+	if (loadState(lightId) == STATE_ON) {
+		turnLightOn();
+	} else {
+		turnLightOff();
+	}
+}
+
+void SmartLight::setPirSwitchInitialState() {
+	if (loadState(pirSwitchId) == STATE_ON) {
+		turnPirSwitchOn();
+	} else {
+		turnPirSwitchOff();
+	}
+}
+
 //=========SMART_HOME==========
 
 SmartHome::SmartHome(SmartLight* smartLights, int collectionSize) {
@@ -202,12 +206,10 @@ void SmartHome::assignIds() {
 }
 
 void SmartHome::beSmart() {
+    if(_isNotInitialized) {
+        initialize();
+    }
 	for (int i = 0; i < _collectionSize; ++i) {
-		if (shouldReportState) {
-			_smartLights[i].sendLightStateToController();
-			_smartLights[i].sendPirSwitchStateToController();
-			shouldReportState = false;
-		}
 		if (_smartLights[i].isButtonActive()) {
 			_smartLights[i].changeLightState();
 		}
@@ -217,6 +219,13 @@ void SmartHome::beSmart() {
 			_smartLights[i].turnLightOffByPir();
 		}
 	}
+}
+
+void SmartHome::initialize() {
+	for (int i = 0; i < _collectionSize; ++i) {
+		_smartLights[i].initialize();
+	}
+	_isNotInitialized = false;
 }
 
 void SmartHome::doPresentation() {
