@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include <Bounce2.h>
+#include <DHT.h>
 
 class SmartLight {
 public:
@@ -49,9 +50,21 @@ private:
   void sendPirSwitchStateToController();
 };
 
+class SmartDHT {
+public:
+  int id = -1;
+
+  SmartDHT(int dhtPin);
+  void updateTemperature();
+private:
+  const DHT _dht;
+  unsigned long _lastUpdateTime = 0;
+};
+
 class SmartHome {
 public:
   SmartHome(SmartLight* smartLights, int collectionSize);
+  SmartHome(SmartLight* smartLights, int collectionSize, SmartDHT* smartDHTs, int collectionSize2);
   void beSmart();
   void doPresentation();
   void handleLightMessage(int lightId, int newState);
@@ -60,6 +73,9 @@ private:
   SmartLight* _smartLights;
   int _collectionSize = 0;
   bool _isNotInitialized = true;
+
+  SmartDHT* _smartDHTs;
+  int _collectionSize2 = 0;
 
   void initialize();
   void assignIds();

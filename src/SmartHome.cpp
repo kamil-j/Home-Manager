@@ -188,12 +188,32 @@ void SmartLight::setPirSwitchInitialState() {
 	}
 }
 
+//=========SMART_DHT==========
+
+SmartDHT::SmartDHT(int dhtPin): _dht(dhtPin, DHT11) {
+  _dht.begin();
+};
+
+void SmartDHT::updateTemperature() {
+    if(millis() - _lastUpdateTime < 3000) {
+        return;
+    }
+    float temperature = _dht.readTemperature();
+    MyMessage msg(id, V_TEMP);
+    send(msg.set(temperature));
+}
+
 //=========SMART_HOME==========
 
 SmartHome::SmartHome(SmartLight* smartLights, int collectionSize) {
 	_smartLights = smartLights;
 	_collectionSize = collectionSize;
 	assignIds();
+}
+
+SmartHome::SmartHome(SmartLight* smartLights, int collectionSize, SmartDHT* smartDHTs, int collectionSize2) : SmartHome(smartLights, collectionSize) {
+	_smartDHTs = smartDHTs;
+    _collectionSize2 = collectionSize2;
 }
 
 void SmartHome::assignIds() {
@@ -203,6 +223,9 @@ void SmartHome::assignIds() {
 		    _smartLights[i].pirSwitchId = i + 1 + _collectionSize;
 		}
 	}
+	for (int i = 0; i < _collectionSize2; ++i) {
+    	_smartDHTs[i].id = i + _collectionSize*2;
+    }
 }
 
 void SmartHome::beSmart() {
@@ -218,6 +241,10 @@ void SmartHome::beSmart() {
 		} else if (_smartLights[i].shouldTurnLightOffByPir()) {
 			_smartLights[i].turnLightOffByPir();
 		}
+	}
+
+	for (int i = 0; i < _collectionSize2; ++i) {
+	    _smartDHTs[i].updateTemperature();
 	}
 }
 
@@ -235,6 +262,9 @@ void SmartHome::doPresentation() {
 		    present(_smartLights[i].pirSwitchId, S_MOTION);
 		}
 	}
+	for (int i = 0; i < _collectionSize2; ++i) {
+        present(_smartDHTs[i].id, S_TEMP);
+    }
 }
 
 void SmartHome::handleLightMessage(int lightId, int newState) {
