@@ -1,0 +1,29 @@
+#define SKETCH_NAME "HomeManager"
+#define SKETCH_VERSION "1.0"
+#define MY_NODE_ID 1
+#define MY_GATEWAY_SERIAL
+
+#include <MySensors_HomeManager.h>
+
+Light light(1, 5);
+SensorDHT sensor(2, 2);
+
+void before() {
+    homeManager.before();
+}
+
+void presentation() {
+    homeManager.presentation();
+}
+
+void setup() {
+    homeManager.setup();
+}
+
+void loop() {
+    homeManager.loop();
+}
+
+void receive(const MyMessage &message) {
+    homeManager.receive(message);
+}
