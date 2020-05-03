@@ -4,9 +4,11 @@
 #define MY_GATEWAY_SERIAL
 
 #include <MySensors_HomeManager.h>
+#include <sensors/Light.h>
+#include <sensors/DHTSensor.h>
 
 Light light(1, 5);
-SensorDHT sensor(2, 2);
+DHTSensor dhtSensor(2, 2);
 
 void before() {
     homeManager.before();

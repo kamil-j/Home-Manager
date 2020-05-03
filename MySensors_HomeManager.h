@@ -14,7 +14,6 @@
 extern HomeManager homeManager;
 HomeManager homeManager;
 
-#include "homeManager/Light.cpp"
-#include "homeManager/SensorDHT.cpp"
+#include "homeManager/Sensor.cpp"
 
 #endif
