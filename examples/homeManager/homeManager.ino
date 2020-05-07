@@ -6,8 +6,11 @@
 #include <MySensors_HomeManager.h>
 #include <sensors/Light.h>
 #include <sensors/DHTSensor.h>
+#include <sensors/Button.h>
 
 Light light(1, 5);
+Button button(A2, &light);
+
 DHTSensor dhtSensor(2, 2);
 
 void before() {

@@ -33,6 +33,14 @@ public:
         }
     }
 
+    void onButtonEvent() {
+        if (_isOn) {
+            turnOff();
+        } else {
+            turnOn();
+        }
+    }
+
 private:
     bool _isOn = false;
     MyMessage _msg;
