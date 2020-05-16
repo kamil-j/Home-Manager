@@ -1,9 +1,9 @@
 #ifndef Light_h
 #define Light_h
 
-class Light: public Sensor {
+class Light: public Entity {
 public:
-    Light(int id, int pin): Sensor(id, pin), _msg(id, V_LIGHT) {
+    Light(int id, int pin): Entity(id, pin), _msg(id, V_LIGHT) {
         pinMode(_pin, OUTPUT);
         digitalWrite(_pin, RELAY_OFF);
     }
@@ -20,8 +20,6 @@ public:
     	}
     }
 
-    void onLoop() {}
-
     void onReceive(MyMessage* message) {
         if (message->type == V_LIGHT) {
             bool isOn = message->getBool();
@@ -34,14 +32,16 @@ public:
     }
 
     void onButtonEvent() {
-        if (_isOn) {
+        if (_isOn && _isOnByPir) {
+            turnOn(false); //Controller already knows that light is turned on
+        } else if (_isOn) {
             turnOff();
         } else {
             turnOn();
         }
     }
 
-    void onPirSensorEvent(bool isActive) {
+    void onPirEvent(bool isActive) {
         if (isActive) {
             _pirLastActiveTime = millis();
             if(shouldTurnOnByPir()) {

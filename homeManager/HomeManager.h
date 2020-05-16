@@ -1,7 +1,7 @@
 #ifndef HomeManager_h
 #define HomeManager_h
 
-#include "Sensor.h"
+#include "Entity.h"
 
 class HomeManager {
 public:
@@ -11,9 +11,9 @@ public:
     void loop();
     void receive(const MyMessage & msg);
 
-    void registerSensor(Sensor* sensor);
+    void registerEntity(Entity* entity);
 private:
-    List<Sensor*> sensors;
+    List<Entity*> entities;
     bool _isNotInitialized = true;
 
     void initialize();

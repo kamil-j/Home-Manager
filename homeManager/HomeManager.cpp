@@ -5,9 +5,9 @@ void HomeManager::before() {
 
 void HomeManager::presentation() {
     sendSketchInfo(SKETCH_NAME, SKETCH_VERSION);
-    for (List<Sensor*>::iterator itr = sensors.begin(); itr != sensors.end(); ++itr) {
-        Sensor* sensor = *itr;
-        sensor->presentation();
+    for (List<Entity*>::iterator itr = entities.begin(); itr != entities.end(); ++itr) {
+        Entity* entity = *itr;
+        entity->presentation();
     }
 }
 
@@ -19,30 +19,30 @@ void HomeManager::loop() {
         initialize();
         _isNotInitialized = false;
     }
-    for (List<Sensor*>::iterator itr = sensors.begin(); itr != sensors.end(); ++itr) {
-        Sensor* sensor = *itr;
-        sensor->onLoop();
+    for (List<Entity*>::iterator itr = entities.begin(); itr != entities.end(); ++itr) {
+        Entity* entity = *itr;
+        entity->onLoop();
     }
 }
 
 void HomeManager::receive(const MyMessage & message) {
-    int sensorId = message.sensor;
-    for (List<Sensor*>::iterator itr = sensors.begin(); itr != sensors.end(); ++itr) {
-        Sensor* sensor = *itr;
-        if(sensor->getId() == sensorId) {
-            sensor->onReceive((MyMessage*) &message);
+    int entityId = message.sensor;
+    for (List<Entity*>::iterator itr = entities.begin(); itr != entities.end(); ++itr) {
+        Entity* entity = *itr;
+        if(entity->getId() == entityId) {
+            entity->onReceive((MyMessage*) &message);
             return;
         }
     }
 }
 
-void HomeManager::registerSensor(Sensor* sensor) {
-	sensors.push(sensor);
+void HomeManager::registerEntity(Entity* entity) {
+	entities.push(entity);
 }
 
 void HomeManager::initialize() {
-    for (List<Sensor*>::iterator itr = sensors.begin(); itr != sensors.end(); ++itr) {
-        Sensor* sensor = *itr;
-        sensor->initialize();
+    for (List<Entity*>::iterator itr = entities.begin(); itr != entities.end(); ++itr) {
+        Entity* entity = *itr;
+        entity->initialize();
     }
 }

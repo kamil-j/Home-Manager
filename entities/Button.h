@@ -3,10 +3,10 @@
 
 #include <Bounce2.h>
 
-class Button: public Sensor {
+class Button: public Entity {
 public:
-    Button(int pin, Sensor* sensor): Sensor(pin) {
-        _sensor = sensor;
+    Button(int pin, Entity* entity): Entity(pin) {
+        _entity = entity;
 
         _debounce.attach(_pin);
         _debounce.interval(5);
@@ -16,11 +16,11 @@ public:
 
     void onLoop() {
         if(isActive()) {
-            _sensor->onButtonEvent();
+            _entity->onButtonEvent();
         }
     }
 private:
-    Sensor* _sensor;
+    Entity* _entity;
     Bounce _debounce = Bounce();
 
     bool isActive() {

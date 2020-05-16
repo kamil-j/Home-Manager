@@ -1,19 +1,19 @@
-#ifndef Sensor_h
-#define Sensor_h
+#ifndef Entity_h
+#define Entity_h
 
-class Sensor {
+class Entity {
 public:
-    Sensor(int pin);
-    Sensor(int id, int pin);
+    Entity(int pin);
+    Entity(int id, int pin);
 
     int getId();
 
     virtual void presentation() { };
     virtual void initialize() { };
-    virtual void onLoop() = 0;
+    virtual void onLoop() { };
     virtual void onReceive(MyMessage* message) { };
     virtual void onButtonEvent() { };
-    virtual void onPirSensorEvent(bool isActive) { };
+    virtual void onPirEvent(bool isActive) { };
 protected:
     int _id = -1;
     int _pin = -1;

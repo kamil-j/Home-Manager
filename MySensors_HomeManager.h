@@ -14,6 +14,6 @@
 extern HomeManager homeManager;
 HomeManager homeManager;
 
-#include "homeManager/Sensor.cpp"
+#include "homeManager/Entity.cpp"
 
 #endif

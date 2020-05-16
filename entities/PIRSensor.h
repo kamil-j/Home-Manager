@@ -3,10 +3,10 @@
 
 #include <Bounce2.h>
 
-class PIRSensor: public Sensor {
+class PIRSensor: public Entity {
 public:
-    PIRSensor(int id, int pin, Sensor* sensor): Sensor(id, pin), _msg(id, V_ARMED) {
-        _sensor = sensor;
+    PIRSensor(int id, int pin, Entity* entity): Entity(id, pin), _msg(id, V_ARMED) {
+        _entity = entity;
     }
 
     void presentation() {
@@ -29,11 +29,11 @@ public:
 
         if(isActive()) {
             _activated = true;
-            _sensor->onPirSensorEvent(_activated);
+            _entity->onPirEvent(_activated);
         }
-        //TODO: Do not call onPirSensorEvent every time
+        //TODO: Do not call onPirEvent every time
         _activated = false;
-        _sensor->onPirSensorEvent(_activated);
+        _entity->onPirEvent(_activated);
     }
 
     void onReceive(MyMessage* message) {
@@ -47,7 +47,7 @@ public:
         }
     }
 private:
-    Sensor* _sensor;
+    Entity* _entity;
     bool _isOn = false;
     bool _activated = false;
     MyMessage _msg;

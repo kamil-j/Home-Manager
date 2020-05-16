@@ -4,10 +4,10 @@
 #define MY_GATEWAY_SERIAL
 
 #include <MySensors_HomeManager.h>
-#include <sensors/Light.h>
-#include <sensors/DHTSensor.h>
-#include <sensors/Button.h>
-#include <sensors/PIRSensor.h>
+#include <entities/Light.h>
+#include <entities/DHTSensor.h>
+#include <entities/Button.h>
+#include <entities/PIRSensor.h>
 
 Light light(1, 5);
 Button button(A2, &light);
