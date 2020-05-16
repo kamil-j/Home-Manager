@@ -13,6 +13,7 @@ public:
     virtual void onLoop() = 0;
     virtual void onReceive(MyMessage* message) { };
     virtual void onButtonEvent() { };
+    virtual void onPirSensorEvent(bool isActive) { };
 protected:
     int _id = -1;
     int _pin = -1;

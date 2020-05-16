@@ -7,11 +7,13 @@
 #include <sensors/Light.h>
 #include <sensors/DHTSensor.h>
 #include <sensors/Button.h>
+#include <sensors/PIRSensor.h>
 
 Light light(1, 5);
 Button button(A2, &light);
+PIRSensor pirSensor(2, 4, &light);
 
-DHTSensor dhtSensor(2, 2);
+DHTSensor dhtSensor(3, 2);
 
 void before() {
     homeManager.before();

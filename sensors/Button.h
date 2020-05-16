@@ -6,7 +6,6 @@
 class Button: public Sensor {
 public:
     Button(int pin, Sensor* sensor): Sensor(pin) {
-        _pin = pin;
         _sensor = sensor;
 
         _debounce.attach(_pin);
@@ -21,7 +20,6 @@ public:
         }
     }
 private:
-    int _pin = -1;
     Sensor* _sensor;
     Bounce _debounce = Bounce();
 

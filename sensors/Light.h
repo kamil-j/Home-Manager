@@ -41,8 +41,24 @@ public:
         }
     }
 
+    void onPirSensorEvent(bool isActive) {
+        if (isActive) {
+            _pirLastActiveTime = millis();
+            if(shouldTurnOnByPir()) {
+                turnOnByPir();
+            }
+            return;
+        }
+        if (shouldTurnOffByPir()) {
+            turnOffByPir();
+        }
+    }
+
 private:
     bool _isOn = false;
+    bool _isOnByPir = false;
+    unsigned long _pirLastActiveTime = 0;
+    unsigned long _pirGracePeriodStartTime = 0;
     MyMessage _msg;
 
     void turnOn(bool sendState = true) {
@@ -65,6 +81,46 @@ private:
 
     void sendStateToController() {
     	send(_msg.set(_isOn ? STATE_ON : STATE_OFF));
+    }
+
+    bool shouldTurnOnByPir() {
+        if (_isOnByPir) {
+            return false;
+        }
+        unsigned long currentTime = millis();
+        if (currentTime < _pirGracePeriodStartTime) { //Only TRUE when millis() will overflow (go back to zero), after approximately 50 days
+            return currentTime > PIR_DETECTOR_GRACE_PERIOD;
+        }
+        return millis() - _pirGracePeriodStartTime > PIR_DETECTOR_GRACE_PERIOD;
+    }
+
+    bool shouldTurnOffByPir() {
+    	if (!_isOnByPir) {
+    		return false;
+    	}
+    	unsigned long currentTime = millis();
+    	if (currentTime < _pirLastActiveTime) { //Only TRUE when millis() will overflow (go back to zero), after approximately 50 days
+    		return currentTime > PIR_DETECTOR_ACTIVE_TIME;
+    	}
+    	return millis() - _pirLastActiveTime > PIR_DETECTOR_ACTIVE_TIME;
+    }
+
+    void turnOnByPir() {
+    	if (!_isOn) {
+    	    digitalWrite(_pin, RELAY_ON);
+    		_isOn = true;
+    		_isOnByPir = true;
+    		sendStateToController();
+    	}
+    }
+
+    void turnOffByPir() {
+    	if (_isOn && _isOnByPir) {
+    		digitalWrite(_pin, RELAY_OFF);
+    		_isOn = false;
+    		_isOnByPir = false;
+    		sendStateToController();
+    	}
     }
 };
 
