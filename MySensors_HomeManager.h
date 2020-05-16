@@ -15,5 +15,6 @@ extern HomeManager homeManager;
 HomeManager homeManager;
 
 #include "homeManager/Entity.cpp"
+#include "homeManager/Supervisor.cpp"
 
 #endif

@@ -23,6 +23,10 @@ void HomeManager::loop() {
         Entity* entity = *itr;
         entity->onLoop();
     }
+    for (List<Supervisor*>::iterator itr = supervisors.begin(); itr != supervisors.end(); ++itr) {
+        Supervisor* supervisor = *itr;
+        supervisor->onLoop();
+    }
 }
 
 void HomeManager::receive(const MyMessage & message) {
@@ -38,6 +42,10 @@ void HomeManager::receive(const MyMessage & message) {
 
 void HomeManager::registerEntity(Entity* entity) {
 	entities.push(entity);
+}
+
+void HomeManager::registerSupervisor(Supervisor* supervisor) {
+	supervisors.push(supervisor);
 }
 
 void HomeManager::initialize() {

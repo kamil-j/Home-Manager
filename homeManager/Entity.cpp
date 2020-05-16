@@ -11,6 +11,11 @@ Entity::Entity(int id, mysensors_data_t dataType, int pin) : _msg(id, dataType) 
 	homeManager.registerEntity(this);
 }
 
+Entity::Entity(int id, mysensors_data_t dataType) : _msg(id, dataType) {
+	_id = id;
+	homeManager.registerEntity(this);
+}
+
 int Entity::getId() {
 	return _id;
 }

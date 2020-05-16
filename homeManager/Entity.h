@@ -5,6 +5,7 @@ class Entity {
 public:
     Entity(int pin);
     Entity(int id, mysensors_data_t dataType, int pin);
+    Entity(int id, mysensors_data_t dataType);
 
     int getId();
 

@@ -19,8 +19,8 @@ Light light(1, 5);
 Button button(A2, &light);
 // Add a PIR sensor entity with homeAssistantId=2 and attached to pin 4. The PIR sensor will control light entity.
 PIRSensor pirSensor(2, 4, &light);
-// Add a DHT sensor entity with homeAssistantId=3 and attached to pin 2.
-DHTSensor dhtSensor(3, 2);
+// Add a DHT sensor entity with homeAssistantId=3 (temperature), homeAssistantId=4 (humidity) and attached to pin 2.
+DHTSensor dhtSensor(3, 4, 2);
 
 // Main Sketch - below code should be always the same (you don't have to touch it)
 
