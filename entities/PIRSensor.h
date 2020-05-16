@@ -5,7 +5,7 @@
 
 class PIRSensor: public Entity {
 public:
-    PIRSensor(int id, int pin, Entity* entity): Entity(id, pin), _msg(id, V_ARMED) {
+    PIRSensor(int id, int pin, Entity* entity): Entity(id, V_ARMED, pin) {
         _entity = entity;
     }
 
@@ -50,7 +50,6 @@ private:
     Entity* _entity;
     bool _isOn = false;
     bool _activated = false;
-    MyMessage _msg;
 
     void turnOn() {
         saveState(_pin, STATE_ON);

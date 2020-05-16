@@ -4,7 +4,7 @@
 class Entity {
 public:
     Entity(int pin);
-    Entity(int id, int pin);
+    Entity(int id, mysensors_data_t dataType, int pin);
 
     int getId();
 
@@ -17,6 +17,7 @@ public:
 protected:
     int _id = -1;
     int _pin = -1;
+    MyMessage _msg;
 };
 
 #endif

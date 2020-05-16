@@ -3,7 +3,7 @@
 
 class Light: public Entity {
 public:
-    Light(int id, int pin): Entity(id, pin), _msg(id, V_LIGHT) {
+    Light(int id, int pin): Entity(id, V_LIGHT, pin) {
         pinMode(_pin, OUTPUT);
         digitalWrite(_pin, RELAY_OFF);
     }
@@ -59,7 +59,6 @@ private:
     bool _isOnByPir = false;
     unsigned long _pirLastActiveTime = 0;
     unsigned long _pirGracePeriodStartTime = 0;
-    MyMessage _msg;
 
     void turnOn(bool sendState = true) {
         digitalWrite(_pin, RELAY_ON);

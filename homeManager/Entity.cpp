@@ -5,7 +5,7 @@ Entity::Entity(int pin) {
 	homeManager.registerEntity(this);
 }
 
-Entity::Entity(int id, int pin) {
+Entity::Entity(int id, mysensors_data_t dataType, int pin) : _msg(id, dataType) {
 	_id = id;
 	_pin = pin;
 	homeManager.registerEntity(this);

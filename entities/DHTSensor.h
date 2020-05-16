@@ -5,7 +5,7 @@
 
 class DHTSensor: public Entity {
 public:
-    DHTSensor(int id, int pin): Entity(id, pin), _msg(id, V_TEMP), _dht(pin, DHT11) {
+    DHTSensor(int id, int pin): Entity(id, V_TEMP, pin), _dht(pin, DHT11) {
         _dht.begin();
     }
 
@@ -21,7 +21,6 @@ public:
 
 private:
     DHT _dht;
-    MyMessage _msg;
     unsigned long _lastUpdateTime = 0;
 
     void updateTemperature() {
