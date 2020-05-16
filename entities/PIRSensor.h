@@ -23,17 +23,16 @@ public:
     }
 
     void onLoop() {
-        if(!_isOn) {
-            return;
+        if(_isOn && isActive()) {
+            _lastActiveTime = millis();
+            if(!_isAlreadyActivated) {
+                _entity->onPirEvent(STATE_ON);
+                _isAlreadyActivated = true;
+            }
+        } else if (_isAlreadyActivated && shouldDeactivate()) {
+            _entity->onPirEvent(STATE_OFF);
+            _isAlreadyActivated = false;
         }
-
-        if(isActive()) {
-            _activated = true;
-            _entity->onPirEvent(_activated);
-        }
-        //TODO: Do not call onPirEvent every time
-        _activated = false;
-        _entity->onPirEvent(_activated);
     }
 
     void onReceive(MyMessage* message) {
@@ -49,7 +48,8 @@ public:
 private:
     Entity* _entity;
     bool _isOn = false;
-    bool _activated = false;
+    bool _isAlreadyActivated = false;
+    unsigned long _lastActiveTime = 0;
 
     void turnOn() {
         saveState(_pin, STATE_ON);
@@ -63,6 +63,14 @@ private:
 
     bool isActive() {
         return digitalRead(_pin) == HIGH;
+    }
+
+    bool shouldDeactivate() {
+        unsigned long currentTime = millis();
+        if (currentTime < _lastActiveTime) { //Only TRUE when millis() will overflow (go back to zero), after approximately 50 days
+            return currentTime > PIR_DETECTOR_ACTIVE_TIME;
+        }
+        return millis() - _lastActiveTime > PIR_DETECTOR_ACTIVE_TIME;
     }
 
     void sendStateToController() {

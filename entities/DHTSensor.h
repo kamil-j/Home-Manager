@@ -14,7 +14,7 @@ public:
     }
 
     void onLoop() {
-        if(millis() - _lastUpdateTime > 5000) {
+        if(millis() - _lastUpdateTime > DHT_UPDATE_TIME) {
             updateTemperature();
         }
     }

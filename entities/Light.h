@@ -41,15 +41,12 @@ public:
         }
     }
 
-    void onPirEvent(bool isActive) {
-        if (isActive) {
-            _pirLastActiveTime = millis();
+    void onPirEvent(bool isPirOn) {
+        if (isPirOn) {
             if(shouldTurnOnByPir()) {
                 turnOnByPir();
             }
-            return;
-        }
-        if (shouldTurnOffByPir()) {
+        } else {
             turnOffByPir();
         }
     }
@@ -57,7 +54,6 @@ public:
 private:
     bool _isOn = false;
     bool _isOnByPir = false;
-    unsigned long _pirLastActiveTime = 0;
     unsigned long _pirGracePeriodStartTime = 0;
 
     void turnOn(bool sendState = true) {
@@ -86,7 +82,7 @@ private:
     }
 
     bool shouldTurnOnByPir() {
-        if (_isOnByPir) {
+        if (_isOn) {
             return false;
         }
         unsigned long currentTime = millis();
@@ -94,17 +90,6 @@ private:
             return currentTime > PIR_DETECTOR_GRACE_PERIOD;
         }
         return millis() - _pirGracePeriodStartTime > PIR_DETECTOR_GRACE_PERIOD;
-    }
-
-    bool shouldTurnOffByPir() {
-    	if (!_isOnByPir) {
-    		return false;
-    	}
-    	unsigned long currentTime = millis();
-    	if (currentTime < _pirLastActiveTime) { //Only TRUE when millis() will overflow (go back to zero), after approximately 50 days
-    		return currentTime > PIR_DETECTOR_ACTIVE_TIME;
-    	}
-    	return millis() - _pirLastActiveTime > PIR_DETECTOR_ACTIVE_TIME;
     }
 
     void turnOnByPir() {
