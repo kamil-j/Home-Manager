@@ -10,7 +10,8 @@ More detailed documentation will be provided soon.
 ``- Light (relay)``  
 ``- Button (wall switch, able to control light)``  
 ``- PIR sensor (able to control light)``  
-``- DHT11 sensor (temperature, humidity)``
+``- DHT11 sensor (temperature, humidity)``  
+``- Reed sensor (open/close doors, windows etc.)``
 
 ### How it works
 

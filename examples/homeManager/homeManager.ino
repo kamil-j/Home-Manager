@@ -12,6 +12,7 @@
 #include <entities/DHTSensor.h>
 #include <entities/Button.h>
 #include <entities/PIRSensor.h>
+#include <entities/ReedSensor.h>
 
 // Add a light entity (relay) with homeAssistantId=1 and attached to pin 5.
 Light light(1, 5);
@@ -21,6 +22,8 @@ Button button(A2, &light);
 PIRSensor pirSensor(2, 4, &light);
 // Add a DHT sensor entity with homeAssistantId=3 (temperature), homeAssistantId=4 (humidity) and attached to pin 2.
 DHTSensor dhtSensor(3, 4, 2);
+// Add a Reed sensor entity with homeAssistantId=5 and attached to pin 7.
+ReedSensor reedSensor(5, 7);
 
 // Main Sketch - below code should be always the same (you don't have to touch it)
 
