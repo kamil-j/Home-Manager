@@ -65,6 +65,7 @@ private:
         digitalWrite(_pin, RELAY_ON);
         saveState(_pin, STATE_ON);
         _isOn = true;
+        _isOnByPir = false;
         if (sendState) {
             sendStateToController();
         }
@@ -74,6 +75,8 @@ private:
         digitalWrite(_pin, RELAY_OFF);
         saveState(_pin, STATE_OFF);
         _isOn = false;
+        _isOnByPir = false;
+        _pirGracePeriodStartTime = millis();
         if (sendState) {
             sendStateToController();
         }
