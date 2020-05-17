@@ -3,6 +3,8 @@
 
 class Light: public Entity {
 public:
+    int pirDetectorGracePeriod = DEFAULT_PIR_DETECTOR_GRACE_PERIOD;
+
     Light(int id, int pin): Entity(id, V_LIGHT, pin) {
         pinMode(_pin, OUTPUT);
         digitalWrite(_pin, RELAY_OFF);
@@ -87,9 +89,9 @@ private:
         }
         unsigned long currentTime = millis();
         if (currentTime < _pirGracePeriodStartTime) { //Only TRUE when millis() will overflow (go back to zero), after approximately 50 days
-            return currentTime > PIR_DETECTOR_GRACE_PERIOD;
+            return currentTime > pirDetectorGracePeriod;
         }
-        return millis() - _pirGracePeriodStartTime > PIR_DETECTOR_GRACE_PERIOD;
+        return millis() - _pirGracePeriodStartTime > pirDetectorGracePeriod;
     }
 
     void turnOnByPir() {

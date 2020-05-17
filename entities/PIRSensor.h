@@ -5,6 +5,8 @@
 
 class PIRSensor: public Entity {
 public:
+    int activeTime = DEFAULT_PIR_DETECTOR_ACTIVE_TIME;
+
     PIRSensor(int id, int pin, Entity* entity): Entity(id, V_ARMED, pin) {
         _entity = entity;
     }
@@ -68,9 +70,9 @@ private:
     bool shouldDeactivate() {
         unsigned long currentTime = millis();
         if (currentTime < _lastActiveTime) { //Only TRUE when millis() will overflow (go back to zero), after approximately 50 days
-            return currentTime > PIR_DETECTOR_ACTIVE_TIME;
+            return currentTime > activeTime;
         }
-        return millis() - _lastActiveTime > PIR_DETECTOR_ACTIVE_TIME;
+        return millis() - _lastActiveTime > activeTime;
     }
 
     void sendStateToController() {

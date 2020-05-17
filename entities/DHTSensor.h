@@ -7,12 +7,14 @@
 
 class DHTSensor: public Supervisor {
 public:
+    int updateTime = DEFAULT_DHT_UPDATE_TIME;
+
     DHTSensor(int temperatureId, int humidityId, int pin): Supervisor(), _temperatureSensor(temperatureId), _humiditySensor(humidityId), _dht(pin, DHT11) {
         _dht.begin();
     }
 
     void onLoop() {
-        if(millis() - _lastUpdateTime > DHT_UPDATE_TIME) {
+        if(millis() - _lastUpdateTime > updateTime) {
             updateTemperature();
             updateHumidity();
             _lastUpdateTime = millis();

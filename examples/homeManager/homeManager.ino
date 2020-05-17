@@ -28,9 +28,12 @@ ReedSensor reedSensor(5, 7);
 // Add a Relay entity with homeAssistantId=6 and attached to pin 6.
 Relay relay(6, 6);
 
-// Main Sketch - below code should be always the same (you don't have to touch it)
+// Main Sketch
 
 void before() {
+    /* (OPTIONAL) light.pirDetectorGracePeriod = 2000; DEFAULT VALUE: 5000 ms */
+    /* (OPTIONAL) pirSensor.activeTime = 3000; DEFAULT VALUE: 10000 ms */
+    /* (OPTIONAL) dhtSensor.updateTime = 10000; DEFAULT VALUE: 30000 ms */
     homeManager.before();
 }
 
