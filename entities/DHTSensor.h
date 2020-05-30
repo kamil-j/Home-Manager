@@ -30,7 +30,6 @@ private:
 
     void updateTemperature() {
         float temperature = _dht.readTemperature();
-        Serial.println(temperature);
         _temperatureSensor.update(temperature);
     }
 
